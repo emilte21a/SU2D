@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerFollow : MonoBehaviour
@@ -14,7 +15,7 @@ public class PlayerFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.SmoothDamp(transform.position, new Vector3(gameObjectToFollow.transform.position.x, 0, -10), ref zero, smoothTime);
+        transform.position = Vector3.SmoothDamp(transform.position, new Vector3(gameObjectToFollow.transform.position.x, gameObjectToFollow.transform.position.y + 2, -10), ref zero, smoothTime);
 
 
     }
