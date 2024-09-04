@@ -7,6 +7,9 @@ using UnityEngine.Tilemaps;
 
 public class WorldGeneration : MonoBehaviour
 {
+    [SerializeField] GameObject building;
+    [SerializeField] GameObject antennae;
+
     [SerializeField]
     TerrainType terrainType;
 
@@ -71,6 +74,9 @@ public class WorldGeneration : MonoBehaviour
                 if (shouldPlaceTile) PlaceTile(new Vector3Int(x, y), tileToPlace);
             }
         }
+
+        Instantiate(building, new Vector3(spawnPoints[130].x, spawnPoints[130].y + 2.2f), quaternion.identity);
+        Instantiate(antennae, new Vector3(spawnPoints[worldSize / 2].x, spawnPoints[worldSize / 2].y + 2.5f), quaternion.identity);
     }
 
     void PlaceTile(Vector3Int position, RuleTile tile)
