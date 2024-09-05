@@ -23,7 +23,7 @@ public class WorldGeneration : MonoBehaviour
     [SerializeField] float surfaceThreshold = 0.9f;
     [SerializeField] float caveFrequency = 0.05f;
     [SerializeField] float terrainFrequency = 0.05f;
-    [SerializeField] short worldSize = 300;
+    [SerializeField] public short worldSize = 300;
     [SerializeField] int heightMultiplier = 15;
     [SerializeField] int seed;
     [SerializeField] Texture2D noiseTexture;
@@ -31,8 +31,8 @@ public class WorldGeneration : MonoBehaviour
     [HideInInspector]
     private List<RuleTile> tilesInWorld;
 
-    [HideInInspector]
-    public static Vector2[] spawnPoints;
+    
+    public Vector2[] spawnPoints;
 
     void Start()
     {

@@ -53,7 +53,7 @@ AnimationClip:
   m_Events:
   - time: 21.066668
     functionName: ChangeScene
-    data: 
+    data: Director
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

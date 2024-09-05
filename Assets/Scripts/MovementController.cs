@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-    [SerializeField] TerrainType terrainType;
+    [SerializeField] WorldGeneration worldGeneration;
 
     [Header("Movement Controls")]
     [SerializeField] float movementSpeed = 10;
@@ -22,19 +22,22 @@ public class MovementController : MonoBehaviour
     public Vector2 boxSize;
     public LayerMask layerMask;
 
+    [SerializeField] Vector3Int spawnPos;
+
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3(WorldGeneration.spawnPoints[100].x, WorldGeneration.spawnPoints[100].y + playerHeight);
         rigidbody2D = GetComponent<Rigidbody2D>();
+        
+        spawnPos = new Vector3Int((int)worldGeneration.spawnPoints[worldGeneration.worldSize / 2].x, (int)worldGeneration.spawnPoints[worldGeneration.worldSize / 2].y + playerHeight);
+        transform.position = spawnPos;
         rigidbody2D.freezeRotation = true;
-        // rigidbody2D.mass = 1 * terrainType.gravityDivider;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float horizontalMovement = Input.GetAxis("Horizontal");
+        float horizontalMovement = Input.GetAxisRaw("Horizontal");
 
         rigidbody2D.velocity = new Vector2(horizontalMovement * movementSpeed, rigidbody2D.velocity.y);
 
@@ -46,11 +49,6 @@ public class MovementController : MonoBehaviour
 
         // if (lastDirection == 1) transform.eulerAngles = new Vector3(0, 0, 0); // normal riktning
         // else if (lastDirection == -1) transform.eulerAngles = new Vector3(0, 180, 0); // flippad riktning
-    }
-
-    void FixedUpdate()
-    {
-
     }
 
     private bool IsGrounded()
