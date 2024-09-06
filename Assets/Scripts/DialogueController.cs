@@ -6,6 +6,8 @@ using Unity.VisualScripting;
 
 public class DialogueController : MonoBehaviour
 {
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip beepboop;
     public TMP_Text text;
     public string lines;
     public float textspeed;
@@ -26,12 +28,6 @@ public class DialogueController : MonoBehaviour
         Scenemanager.LoadScene(sceneName);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void StartDialogue()
     {
         dialogueIsDone = false;
@@ -45,8 +41,8 @@ public class DialogueController : MonoBehaviour
         foreach (char c in lines.ToCharArray())
         {
             text.text += c;
+            audioSource.PlayOneShot(beepboop);
             float randomSpeed = textspeed + Random.Range(-0.05f, 0.05f);
-            randomSpeed = Mathf.Clamp(randomSpeed, 0.01f, 0.2f);
             yield return new WaitForSeconds(randomSpeed);
         }
         dialogueIsDone = true;

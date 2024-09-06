@@ -8,20 +8,17 @@ public class LoadingScreenManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text loadingText;
     [SerializeField] DialogueController dialogueController;
-    [SerializeField] float timeToChangeScene = 3;
+    [SerializeField] float timeToChangeScene = 5;
 
     string planetName;
 
     void Start()
     {
-        // Retrieve the saved planet destination from PlayerPrefs
         planetName = PlayerPrefs.GetString("PlanetDestination", "Unknown Planet");
         dialogueController.lines = "Travelling to the " + planetName + "....";
 
         dialogueController.text = loadingText;
         dialogueController.StartDialogue();
-        // // Display the planet name on the loading screen
-        // loadingText.text = "Travelling To The " + planetName;
     }
 
 

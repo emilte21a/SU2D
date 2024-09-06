@@ -15,4 +15,7 @@ public class TerrainType : ScriptableObject
 
     [Header("The players mass is divided by this number")]
     public float gravityDivider;
+
+    [Header("A The Specific Seed of One Planet")]
+    public int seed;
 }

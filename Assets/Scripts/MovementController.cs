@@ -18,23 +18,25 @@ public class MovementController : MonoBehaviour
     [SerializeField] ParticleSystem dust;
 
     [Header("Ground Check")]
-    public float castDistance = 1;
-    public Vector2 boxSize;
-    public LayerMask layerMask;
+    [SerializeField] float castDistance = 1;
+    [SerializeField] Vector2 boxSize;
+    [SerializeField] LayerMask layerMask;
 
-    [SerializeField] Vector3Int spawnPos;
+    [SerializeField] Vector3 spawnPos;
 
-    // Start is called before the first frame update
     void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
-        
-        spawnPos = new Vector3Int((int)worldGeneration.spawnPoints[worldGeneration.worldSize / 2].x, (int)worldGeneration.spawnPoints[worldGeneration.worldSize / 2].y + playerHeight);
-        transform.position = spawnPos;
+
+        if (worldGeneration.spawnPoints != null && worldGeneration.spawnPoints.Length > 0)
+        {
+            spawnPos = new Vector3((int)worldGeneration.spawnPoints[worldGeneration.worldSize / 2].x, (int)worldGeneration.spawnPoints[worldGeneration.worldSize / 2].y + playerHeight);
+            transform.position = spawnPos;
+        }
+
         rigidbody2D.freezeRotation = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
         float horizontalMovement = Input.GetAxisRaw("Horizontal");

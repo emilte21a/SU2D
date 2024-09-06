@@ -1,18 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlanetTravel : MonoBehaviour
 {
-    // This method will be called from the button with the planet and loading scene as parameters
+    [SerializeField] RawImage blackOverlay;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip audioClip;
+    float timer = 3;
+    float alpha = 0;
+
     public void BeginTravel(string planetName)
     {
-        // Store the planet name in PlayerPrefs (or any other persistent storage)
-        PlayerPrefs.SetString("PlanetDestination", planetName); // Save the destination
+        if (alpha < 255) alpha++;
 
-        // Load the loading screen scene
-        SceneManager.LoadScene("LoadingScene");
+        audioSource.PlayOneShot(audioClip);
+        
+        if (timer > 0)
+            timer -= Time.deltaTime;
+
+
+        else if (timer < 0)
+        {
+            blackOverlay.color = new Color(0, 0, 0, alpha);
+            PlayerPrefs.SetString("PlanetDestination", planetName);
+            SceneManager.LoadScene("LoadingScene");
+        }
+
     }
 }

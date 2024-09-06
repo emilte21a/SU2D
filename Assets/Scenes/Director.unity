@@ -6167,6 +6167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f360c898b4f05a42a75dbcea129fafd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blackOverlay: {fileID: 1197155748}
+  audioSource: {fileID: 1197155750}
+  audioClip: {fileID: 8300000, guid: 02cf890fad35629488ed30569ddf063c, type: 3}
 --- !u!1 &1360510354
 GameObject:
   m_ObjectHideFlags: 0

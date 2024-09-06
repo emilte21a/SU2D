@@ -31,15 +31,14 @@ public class WorldGeneration : MonoBehaviour
     [HideInInspector]
     private List<RuleTile> tilesInWorld;
 
-    
     public Vector2[] spawnPoints;
 
     void Start()
     {
+        spawnPoints = new Vector2[worldSize];
         tilesInWorld = new List<RuleTile>();
         seed = UnityEngine.Random.Range(-10000, 10000);
         tileToPlace = terrainType.ruleTile;
-        spawnPoints = new Vector2[worldSize];
         GenerateNoiseTexture();
         GenerateWorld();
     }
@@ -63,6 +62,7 @@ public class WorldGeneration : MonoBehaviour
 
     void GenerateWorld()
     {
+        tilesInWorld.Clear();
         for (int x = 0; x < worldSize; x++)
         {
             int height = (int)(Mathf.PerlinNoise((x + seed) * terrainFrequency * terrainType.craziness, seed * terrainFrequency * terrainType.craziness) * heightMultiplier + 100);
