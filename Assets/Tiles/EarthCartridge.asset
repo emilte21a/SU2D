@@ -15,3 +15,4 @@ MonoBehaviour:
   ruleTile: {fileID: 11400000, guid: 96e9c0f4c27b54949ace41e45a88beab, type: 2}
   craziness: 1
   gravityDivider: 0
+  seed: 237

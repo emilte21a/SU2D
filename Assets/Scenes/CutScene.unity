@@ -6255,8 +6255,8 @@ MonoBehaviour:
   beepboop: {fileID: 8300000, guid: 8cb798e318b5ec64991aa51f6059f315, type: 3}
   text: {fileID: 702683835}
   lines: enigma
-  textspeed: 4
-  initialTextSpeed: 4
+  textspeed: 1
+  initialTextSpeed: 1
   dialogueIsDone: 0
 --- !u!4 &1863378964
 Transform:

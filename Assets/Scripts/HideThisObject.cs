@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DisableThisObject : MonoBehaviour
+public class HideThisObject : MonoBehaviour
 {
     public void DisableObject()
     {
-        transform.gameObject.SetActive(false);
+        GetComponent<SpriteRenderer>().enabled = false;
     }
 
 

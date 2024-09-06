@@ -11,25 +11,32 @@ public class PlanetTravel : MonoBehaviour
     [SerializeField] RawImage blackOverlay;
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip audioClip;
-    float timer = 3;
-    float alpha = 0;
+    [SerializeField] float timer = 0;
+
+    string planetDestination;
+
+    void Start()
+    {
+    }
 
     public void BeginTravel(string planetName)
     {
-        if (alpha < 255) alpha++;
-
+        planetDestination = planetName;
+        timer = 3;
         audioSource.PlayOneShot(audioClip);
-        
+        blackOverlay.GetComponent<Animator>().SetBool("OnDirectorOpen", false);
+    }
+
+    void Update()
+    {
         if (timer > 0)
             timer -= Time.deltaTime;
 
-
         else if (timer < 0)
         {
-            blackOverlay.color = new Color(0, 0, 0, alpha);
-            PlayerPrefs.SetString("PlanetDestination", planetName);
+
+            PlayerPrefs.SetString("PlanetDestination", planetDestination);
             SceneManager.LoadScene("LoadingScene");
         }
-
     }
 }

@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: MoonCartridge
   m_EditorClassIdentifier: 
   ruleTile: {fileID: 11400000, guid: f9c08f125fcf7a840a559cc77d9c39ab, type: 2}
-  craziness: 1
+  craziness: 3
   gravityDivider: 0
+  seed: 2739

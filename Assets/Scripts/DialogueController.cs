@@ -41,7 +41,8 @@ public class DialogueController : MonoBehaviour
         foreach (char c in lines.ToCharArray())
         {
             text.text += c;
-            audioSource.PlayOneShot(beepboop);
+            if (c != ' ')
+                audioSource.PlayOneShot(beepboop);
             float randomSpeed = textspeed + Random.Range(-0.05f, 0.05f);
             yield return new WaitForSeconds(randomSpeed);
         }

@@ -6170,6 +6170,9 @@ MonoBehaviour:
   blackOverlay: {fileID: 1197155748}
   audioSource: {fileID: 1197155750}
   audioClip: {fileID: 8300000, guid: 02cf890fad35629488ed30569ddf063c, type: 3}
+  timer: 0
+  alpha: 0
+  LALALALA: 0
 --- !u!1 &1360510354
 GameObject:
   m_ObjectHideFlags: 0

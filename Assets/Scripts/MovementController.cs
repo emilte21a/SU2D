@@ -24,6 +24,12 @@ public class MovementController : MonoBehaviour
 
     [SerializeField] Vector3 spawnPos;
 
+    private float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+
+    private float bufferTime = 0.2f;
+    private float bufferCounter;
+
     void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
@@ -43,8 +49,29 @@ public class MovementController : MonoBehaviour
 
         rigidbody2D.velocity = new Vector2(horizontalMovement * movementSpeed, rigidbody2D.velocity.y);
 
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
-            Jump();
+
+        //Logik gällande Jump Buffering och Coyote Time
+        if (IsGrounded()) coyoteTimeCounter = coyoteTime;
+        else coyoteTimeCounter -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.Space)) bufferCounter = bufferTime;
+        else bufferCounter -= Time.deltaTime;
+
+
+        if (bufferCounter > 0 && coyoteTimeCounter > 0)
+        {
+            CreateDust();
+            rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpForce);
+            bufferCounter = 0;
+        }
+
+        //Gör det möjligt för mindre hopp om man lätt "tapar" på space och större hopp om man håller ned
+        else if (Input.GetKeyUp(KeyCode.Space) && rigidbody2D.velocity.y > 0)
+        {
+            rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y * 0.5f);
+            coyoteTimeCounter = 0f;
+        }
+
 
         if (rigidbody2D.velocity.x > 0) lastDirection = 1;
         else if (rigidbody2D.velocity.x < 0) lastDirection = -1;
@@ -59,13 +86,6 @@ public class MovementController : MonoBehaviour
             return true;
 
         return false;
-    }
-
-    private void Jump()
-    {
-        CreateDust();
-        rigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
     }
 
     private void OnDrawGizmos()

@@ -9,7 +9,9 @@ public class LoadingScreenManager : MonoBehaviour
     [SerializeField] private TMP_Text loadingText;
     [SerializeField] DialogueController dialogueController;
     [SerializeField] float timeToChangeScene = 5;
-
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip AudioClip;
+    
     string planetName;
 
     void Start()

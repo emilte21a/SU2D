@@ -7,6 +7,10 @@ using UnityEngine.Tilemaps;
 
 public class WorldGeneration : MonoBehaviour
 {
+    //Skrev egentligen detta scriptet i 3an i gymnasiet, 
+    //så det är menat att vara random seeds varje gång, 
+    //men för enkelhet så har jag skippat det och hållt mig till ett fast seed för varje bana så att jag kan customisa själv
+
     [SerializeField] GameObject building;
     [SerializeField] GameObject antennae;
 
@@ -29,7 +33,7 @@ public class WorldGeneration : MonoBehaviour
     [SerializeField] Texture2D noiseTexture;
 
     [HideInInspector]
-    private List<RuleTile> tilesInWorld;
+    private static List<RuleTile> tilesInWorld;
 
     public Vector2[] spawnPoints;
 
@@ -37,7 +41,7 @@ public class WorldGeneration : MonoBehaviour
     {
         spawnPoints = new Vector2[worldSize];
         tilesInWorld = new List<RuleTile>();
-        seed = UnityEngine.Random.Range(-10000, 10000);
+        seed = terrainType.seed;
         tileToPlace = terrainType.ruleTile;
         GenerateNoiseTexture();
         GenerateWorld();
@@ -75,8 +79,7 @@ public class WorldGeneration : MonoBehaviour
             }
         }
 
-        Instantiate(building, new Vector3(spawnPoints[130].x, spawnPoints[130].y + 2.2f), quaternion.identity);
-        Instantiate(antennae, new Vector3(spawnPoints[worldSize / 2].x, spawnPoints[worldSize / 2].y + 2.5f), quaternion.identity);
+        Instantiate(antennae, new Vector3(spawnPoints[worldSize / 2].x + 0.5f, spawnPoints[worldSize / 2].y + 2.5f), quaternion.identity);
     }
 
     void PlaceTile(Vector3Int position, RuleTile tile)
