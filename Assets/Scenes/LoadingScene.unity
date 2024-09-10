@@ -490,7 +490,7 @@ MonoBehaviour:
   dialogueController: {fileID: 81495678}
   timeToChangeScene: 5
   audioSource: {fileID: 1075805318}
-  AudioClip: {fileID: 8300000, guid: 584880a554c3fbf4db4da2013836f65a, type: 3}
+  audioClip: {fileID: 8300000, guid: 584880a554c3fbf4db4da2013836f65a, type: 3}
 --- !u!4 &1075805317
 Transform:
   m_ObjectHideFlags: 0
@@ -518,7 +518,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 34ed4a9476035a747918a1964914d07e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.645
   m_Pitch: 1
   Loop: 0
   Mute: 0
