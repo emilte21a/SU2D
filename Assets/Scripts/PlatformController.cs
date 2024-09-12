@@ -8,7 +8,6 @@ public class PlatformController : MonoBehaviour
     private Collider2D _collider;
     private bool _isPlayerOnPlatform;
 
-
     void Start()
     {
         _collider = GetComponent<Collider2D>();
@@ -21,6 +20,7 @@ public class PlatformController : MonoBehaviour
             _collider.enabled = false;
             StartCoroutine(EnableCollider());
         }
+
     }
 
     IEnumerator EnableCollider()
@@ -44,6 +44,6 @@ public class PlatformController : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D other)
     {
-        SetPlayerOnPlatform(other, true);
+        SetPlayerOnPlatform(other, false);
     }
 }

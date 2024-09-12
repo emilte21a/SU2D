@@ -27,13 +27,9 @@ public class PlayerFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mousePos = Input.mousePosition;
-        mousePos.z = 0f;
-        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        mousePos.z = 0f;
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         Vector3 direction = (mousePos - gameObjectToFollow.transform.position).normalized;
-
 
         if (timer > 0)
         {
@@ -42,7 +38,7 @@ public class PlayerFollow : MonoBehaviour
         else
             _initialSmoothing = smoothTime;
 
-        transform.position = Vector3.SmoothDamp(transform.position, new Vector3(gameObjectToFollow.transform.position.x + gameObjectToFollow.GetComponent<MovementController>().lastDirection, gameObjectToFollow.transform.position.y + 2, -10) + offset + direction, ref zero, _initialSmoothing);
+        transform.position = Vector3.SmoothDamp(transform.position, new Vector3(gameObjectToFollow.transform.position.x + gameObjectToFollow.GetComponent<MovementController>().lastDirection / 2, gameObjectToFollow.transform.position.y + 2, -10) + offset + direction / 4, ref zero, _initialSmoothing);
     }
 
     float timer = 0.5f;

@@ -1,18 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-    [SerializeField] WorldGeneration worldGeneration;
-    [SerializeField] InventoryController inventoryController;
-
     [Header("Movement Controls")]
     [SerializeField] float movementSpeed = 10;
     [SerializeField] float jumpForce = 10;
-    [SerializeField] public short lastDirection = 1;
-    [SerializeField] float playerHeight;
+    [HideInInspector] public short lastDirection = 1;
 
     [Header("Important stuff")]
     [SerializeField] Rigidbody2D rigidbody2D;
@@ -24,61 +21,64 @@ public class MovementController : MonoBehaviour
     [SerializeField] Vector2 boxSize;
     [SerializeField] LayerMask layerMask;
 
-
-    private Vector3 _spawnPos;
-
-    private readonly float _coyoteTime = 0.2f;
+    private readonly float _coyoteTime = 0.4f;
     private float _coyoteTimeCounter;
 
-    private readonly float _bufferTime = 0.2f;
+    private readonly float _bufferTime = 0.4f;
     private float _bufferCounter;
 
     Animator animator;
 
+    [Header("Audio")]
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip jumpSound;
+
+    bool isWithinDoor;
+
     void Start()
     {
-        inventoryController = GetComponent<InventoryController>();
+
         animator = GetComponent<Animator>();
-        playerHeight = GetComponentInChildren<SpriteRenderer>().bounds.size.y + 1;
+
         rigidbody2D = GetComponent<Rigidbody2D>();
 
-        if (worldGeneration.spawnPoints != null && worldGeneration.spawnPoints.Length > 0)
-        {
-            _spawnPos = new Vector3((int)worldGeneration.spawnPoints[worldGeneration.worldSize / 2].x, (int)worldGeneration.spawnPoints[worldGeneration.worldSize / 2].y + playerHeight);
-            transform.position = _spawnPos;
-        }
-
         rigidbody2D.freezeRotation = true;
+
     }
 
     void Update()
     {
+
+        if (Input.GetKey(KeyCode.C)) transform.localScale = new Vector3(1.5f, 0.8f, 1.5f);
+        else transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+
+        if (isWithinDoor && Input.GetKeyDown(KeyCode.F)) Scenemanager.LoadScene("moonBunker");
+
         float horizontalMovement = Input.GetAxisRaw("Horizontal");
 
         rigidbody2D.velocity = new Vector2(horizontalMovement * movementSpeed, rigidbody2D.velocity.y);
 
-
         if (rigidbody2D.velocity.x > 0 || rigidbody2D.velocity.x < 0)
-        {
-            Debug.Log("RUNNING!");
             animator.SetBool("IsRunning", true);
-        }
+        
         else
-        {
             animator.SetBool("IsRunning", false);
-        }
+        
 
-        //Logik gällande Jump Buffering och Coyote Time
-        if (IsGrounded()) _coyoteTimeCounter = _coyoteTime;
+        if (IsGrounded())
+            _coyoteTimeCounter = _coyoteTime;
 
-        else _coyoteTimeCounter -= Time.deltaTime;
+        else
+            _coyoteTimeCounter -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Space)) _bufferCounter = _bufferTime;
         else _bufferCounter -= Time.deltaTime;
 
 
-        if (_bufferCounter > 0 && _coyoteTimeCounter > 0)
+        if (_bufferCounter > 0 && _coyoteTimeCounter > 0) //Här är själva hoppet
         {
+            audioSource.pitch = Random.Range(0.8f, 1.2f);
+            audioSource.PlayOneShot(jumpSound);
             CreateDust();
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpForce);
             _bufferCounter = 0;
@@ -106,9 +106,10 @@ public class MovementController : MonoBehaviour
 
         if (lastDirection == 1) spriteHolder.transform.eulerAngles = new Vector3(0, 0, 0); // normal riktning
         else if (lastDirection == -1) spriteHolder.transform.eulerAngles = new Vector3(0, 180, 0); // flippad riktning
+
     }
 
-    private bool IsGrounded()
+    public bool IsGrounded()
     {
         return Physics2D.BoxCast(transform.position, boxSize, 0, -transform.up, castDistance, layerMask);
     }
@@ -123,12 +124,23 @@ public class MovementController : MonoBehaviour
         dust.Play();
     }
 
+
+
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Collectible"))
+        if (other.CompareTag("Building"))
         {
-            inventoryController.AddItemToInventory(ItemType.MechanicalPart, 1);
-            other.gameObject.SetActive(false);
+            isWithinDoor = true;
         }
     }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Building"))
+        {
+            isWithinDoor = false;
+        }
+    }
+
+
 }
