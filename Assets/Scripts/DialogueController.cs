@@ -25,7 +25,7 @@ public class DialogueController : MonoBehaviour
 
     public void ChangeScene(string sceneName)
     {
-        Scenemanager.LoadScene(sceneName);
+        SceneManager.LoadScene(sceneName);
     }
 
     public void StartDialogue()

@@ -4,25 +4,32 @@ using UnityEngine;
 
 public class MechanicalPartHandler : MonoBehaviour
 {
-    public static List<Transform> mechanicalPartsPositions;
+    public List<Transform> mechanicalPartsPositions;
     public List<GameObject> mechanicalParts;
 
     [SerializeField] GameObject mechanicalPartPrefab;
+    [SerializeField] GameObject vialPrefab;
+
+    [SerializeField] Transform vialPosition;
 
     // Start is called before the first frame update
     void Start()
     {
-        mechanicalPartsPositions = new List<Transform>();
-        mechanicalParts = new List<GameObject>();
-
+        InitializeCollectibles();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void InitializeCollectibles()
     {
-        for (int i = 0; i < mechanicalParts.Count; i++)
+        mechanicalParts.Clear();
+        for (int i = 0; i < mechanicalPartsPositions.Count; i++)
         {
-            mechanicalPartsPositions.Add(mechanicalParts[i].transform);
+            GameObject mechPart = Instantiate(mechanicalPartPrefab, mechanicalPartsPositions[i].position, mechanicalPartsPositions[i].rotation);
+            mechPart.transform.SetParent(mechanicalPartsPositions[i]);
+            mechanicalParts.Add(mechPart);
         }
+        GameObject vial = Instantiate(vialPrefab, vialPosition.position, vialPosition.rotation);
+        vial.transform.SetParent(vialPosition);
+        mechanicalParts.Add(vial);
     }
+
 }

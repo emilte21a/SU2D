@@ -36,7 +36,7 @@ public class PlanetTravel : MonoBehaviour
         {
 
             PlayerPrefs.SetString("PlanetDestination", planetDestination);
-            SceneManager.LoadScene("LoadingScene");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("LoadingScene");
         }
     }
 }

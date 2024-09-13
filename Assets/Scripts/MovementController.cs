@@ -35,20 +35,12 @@ public class MovementController : MonoBehaviour
 
     bool isWithinDoor;
 
+    [Header("Misc")]
     [SerializeField] TMP_Text errorMessage;
-
-    enum CurrentScene
-    {
-        Moon,
-        Earth,
-        MoonBunker
-    }
-
-    [SerializeField] CurrentScene currentScene = CurrentScene.Moon;
+    [SerializeField] public SceneInformation sceneInfo;
 
     void Start()
     {
-
         animator = GetComponent<Animator>();
 
         rigidbody2D = GetComponent<Rigidbody2D>();
@@ -59,24 +51,25 @@ public class MovementController : MonoBehaviour
 
     void Update()
     {
+        sceneInfo.itemsInInventory = InventoryController.itemsInInventory;
 
         if (Input.GetKey(KeyCode.C)) transform.localScale = new Vector3(1.5f, 0.8f, 1.5f);
         else transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
-        if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && currentScene == CurrentScene.Moon)
+        if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && sceneInfo.currentScene == CurrentScene.Moon)
         {
-            Scenemanager.LoadScene("moonBunker");
-            currentScene = CurrentScene.MoonBunker;
+            SceneManager.LoadScene("moonBunker");
+            sceneInfo.currentScene = CurrentScene.MoonBunker;
         }
-        else if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && currentScene == CurrentScene.MoonBunker && InventoryController.itemsInInventory.Count == GetComponent<InventoryController>().maxItems)
+        else if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && sceneInfo.currentScene == CurrentScene.MoonBunker && InventoryController.itemsInInventory.Count >= GetComponent<InventoryController>().maxItems)
         {
-            currentScene = CurrentScene.Moon;
-            Scenemanager.LoadScene("Moon");
+            sceneInfo.currentScene = CurrentScene.Moon;
+            SceneManager.LoadScene("Moon");
         }
-        else if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && currentScene == CurrentScene.MoonBunker && InventoryController.itemsInInventory.Count < GetComponent<InventoryController>().maxItems)
+        else if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && sceneInfo.currentScene == CurrentScene.MoonBunker && InventoryController.itemsInInventory.Count < GetComponent<InventoryController>().maxItems)
         {
             errorMessage.text = "YOU HAVE NOT GATHERED ENOUGH PARTS...";
-            StartCoroutine(ErrorMessageClose());
+            StartCoroutine(ErrorMessageDisplay());
             // StopCoroutine(ErrorMessageClose());
         }
 
@@ -151,7 +144,7 @@ public class MovementController : MonoBehaviour
     }
 
 
-    IEnumerator ErrorMessageClose()
+    IEnumerator ErrorMessageDisplay()
     {
         errorMessage.enabled = true;
         yield return new WaitForSeconds(2);

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Scenemanager : MonoBehaviour
+public class SceneManager : MonoBehaviour
 {
+    //Mest användsbara metoden någonsin 
     public static void LoadScene(string name)
     {
-        SceneManager.LoadScene(name);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(name);
     }
 }

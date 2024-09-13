@@ -9,9 +9,13 @@ public class BunkerConfig : MonoBehaviour
     [SerializeField] TMP_Text healthPointDisplay;
     [SerializeField] Transform spawnPoint;
     [SerializeField] public float HP = 100;
+    [Header("Audio")]
     [SerializeField] AudioClip collectiblePickupSound;
     [SerializeField] AudioClip onDeathSound;
     [SerializeField] AudioClip[] takingDamageSound = new AudioClip[2];
+
+    [Header("CollectibleHandler")]
+    [SerializeField] MechanicalPartHandler mechanicalPartHandler;
     private InventoryController inventoryController;
 
     private int _maxFallSpeedBeforeTakingDamage = -26;
@@ -20,17 +24,23 @@ public class BunkerConfig : MonoBehaviour
 
     bool playerIsElectrocuted = false;
 
-    Timer timer;
+    Timer timer = new Timer(1000);
 
     void Start()
     {
         transform.position = spawnPoint.position;
         inventoryController = GetComponent<InventoryController>();
         HP = 100;
+        timer.Elapsed += (sender, e) =>
+        {
+            HP -= 12;
+            GetComponent<AudioSource>().PlayOneShot(takingDamageSound[(int)Random.Range(0, 2)]);
+        };
     }
 
     void Update()
     {
+
         //Om spelaren tar damage (är glitchig som bara den)
         if (GetComponent<MovementController>().IsGrounded())
         {
@@ -39,22 +49,22 @@ public class BunkerConfig : MonoBehaviour
                 HP -= Mathf.Abs((int)latestVelocity.y * 2 - _maxFallSpeedBeforeTakingDamage);
                 GetComponent<AudioSource>().PlayOneShot(takingDamageSound[(int)Random.Range(0, 2)]);
             }
-
         }
 
         latestVelocity = GetComponent<Rigidbody2D>().velocity;
 
-        if (playerIsElectrocuted)
-        {
-            timer.Elapsed += (sender, e) => { GetComponent<BunkerConfig>().HP -= 12; };
-        }
+        if (playerIsElectrocuted) timer.Start();
+
+        else timer.Stop();
 
         //Om spelaren dör damage (är glitchig som bara den)
         if (HP <= 0)
         {
             GetComponent<AudioSource>().PlayOneShot(onDeathSound);
             transform.position = spawnPoint.position;
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             InventoryController.itemsInInventory.Clear();
+            mechanicalPartHandler.InitializeCollectibles();
             HP = 100;
         }
 
@@ -69,7 +79,6 @@ public class BunkerConfig : MonoBehaviour
             {
                 GetComponent<AudioSource>().PlayOneShot(collectiblePickupSound);
                 inventoryController.AddItemToInventory(ItemType.MechanicalPart, 1);
-                MechanicalPartHandler.mechanicalPartsPositions.Add(other.transform);
                 other.gameObject.SetActive(false);
             }
         }
@@ -81,7 +90,6 @@ public class BunkerConfig : MonoBehaviour
 
         else if (other.CompareTag("ElectricWire"))
         {
-            timer.Start();
             playerIsElectrocuted = true;
         }
     }
@@ -90,7 +98,6 @@ public class BunkerConfig : MonoBehaviour
     {
         if (other.CompareTag("ElectricWire"))
         {
-            timer.Stop();
             playerIsElectrocuted = false;
         }
     }
