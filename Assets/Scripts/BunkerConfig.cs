@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Timers;
 
 public class BunkerConfig : MonoBehaviour
 {
@@ -17,6 +18,10 @@ public class BunkerConfig : MonoBehaviour
 
     Vector2 latestVelocity;
 
+    bool playerIsElectrocuted = false;
+
+    Timer timer;
+
     void Start()
     {
         transform.position = spawnPoint.position;
@@ -26,6 +31,7 @@ public class BunkerConfig : MonoBehaviour
 
     void Update()
     {
+        //Om spelaren tar damage (är glitchig som bara den)
         if (GetComponent<MovementController>().IsGrounded())
         {
             if (latestVelocity.y < _maxFallSpeedBeforeTakingDamage)
@@ -38,12 +44,17 @@ public class BunkerConfig : MonoBehaviour
 
         latestVelocity = GetComponent<Rigidbody2D>().velocity;
 
+        if (playerIsElectrocuted)
+        {
+            timer.Elapsed += (sender, e) => { GetComponent<BunkerConfig>().HP -= 12; };
+        }
 
+        //Om spelaren dör damage (är glitchig som bara den)
         if (HP <= 0)
         {
             GetComponent<AudioSource>().PlayOneShot(onDeathSound);
             transform.position = spawnPoint.position;
-            inventoryController.itemsInInventory.Clear();
+            InventoryController.itemsInInventory.Clear();
             HP = 100;
         }
 
@@ -58,8 +69,29 @@ public class BunkerConfig : MonoBehaviour
             {
                 GetComponent<AudioSource>().PlayOneShot(collectiblePickupSound);
                 inventoryController.AddItemToInventory(ItemType.MechanicalPart, 1);
+                MechanicalPartHandler.mechanicalPartsPositions.Add(other.transform);
                 other.gameObject.SetActive(false);
             }
+        }
+
+        else if (other.CompareTag("KillZone"))
+        {
+            GetComponent<BunkerConfig>().HP = 0;
+        }
+
+        else if (other.CompareTag("ElectricWire"))
+        {
+            timer.Start();
+            playerIsElectrocuted = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("ElectricWire"))
+        {
+            timer.Stop();
+            playerIsElectrocuted = false;
         }
     }
 }

@@ -8,7 +8,9 @@ public class InventoryController : MonoBehaviour
 {
     public TMP_Text textDisplay;
 
-    public Dictionary<ItemType, int> itemsInInventory;
+    public static Dictionary<ItemType, int> itemsInInventory;
+
+    public int maxItems = 7;
 
     void Start()
     {
@@ -23,11 +25,11 @@ public class InventoryController : MonoBehaviour
             foreach (var kvp in itemsInInventory)
             {
                 if (itemsInInventory.Count > 0)
-                    textDisplay.text = $" {itemsInInventory[kvp.Key]}/12";
+                    textDisplay.text = $" {itemsInInventory[kvp.Key]}/" + maxItems;
             }
         }
         else
-            textDisplay.text = $"0/12";
+            textDisplay.text = $"0/" + maxItems;
     }
 
     public void AddItemToInventory(ItemType itemType, int quantity)

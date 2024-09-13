@@ -35,6 +35,17 @@ public class MovementController : MonoBehaviour
 
     bool isWithinDoor;
 
+    [SerializeField] TMP_Text errorMessage;
+
+    enum CurrentScene
+    {
+        Moon,
+        Earth,
+        MoonBunker
+    }
+
+    [SerializeField] CurrentScene currentScene = CurrentScene.Moon;
+
     void Start()
     {
 
@@ -52,7 +63,22 @@ public class MovementController : MonoBehaviour
         if (Input.GetKey(KeyCode.C)) transform.localScale = new Vector3(1.5f, 0.8f, 1.5f);
         else transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
-        if (isWithinDoor && Input.GetKeyDown(KeyCode.F)) Scenemanager.LoadScene("moonBunker");
+        if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && currentScene == CurrentScene.Moon)
+        {
+            Scenemanager.LoadScene("moonBunker");
+            currentScene = CurrentScene.MoonBunker;
+        }
+        else if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && currentScene == CurrentScene.MoonBunker && InventoryController.itemsInInventory.Count == GetComponent<InventoryController>().maxItems)
+        {
+            currentScene = CurrentScene.Moon;
+            Scenemanager.LoadScene("Moon");
+        }
+        else if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && currentScene == CurrentScene.MoonBunker && InventoryController.itemsInInventory.Count < GetComponent<InventoryController>().maxItems)
+        {
+            errorMessage.text = "YOU HAVE NOT GATHERED ENOUGH PARTS...";
+            StartCoroutine(ErrorMessageClose());
+            // StopCoroutine(ErrorMessageClose());
+        }
 
         float horizontalMovement = Input.GetAxisRaw("Horizontal");
 
@@ -60,10 +86,10 @@ public class MovementController : MonoBehaviour
 
         if (rigidbody2D.velocity.x > 0 || rigidbody2D.velocity.x < 0)
             animator.SetBool("IsRunning", true);
-        
+
         else
             animator.SetBool("IsRunning", false);
-        
+
 
         if (IsGrounded())
             _coyoteTimeCounter = _coyoteTime;
@@ -125,6 +151,12 @@ public class MovementController : MonoBehaviour
     }
 
 
+    IEnumerator ErrorMessageClose()
+    {
+        errorMessage.enabled = true;
+        yield return new WaitForSeconds(2);
+        errorMessage.enabled = false;
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
