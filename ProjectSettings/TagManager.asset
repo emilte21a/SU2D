@@ -9,6 +9,7 @@ TagManager:
   - Building
   - KillZone
   - ElectricWire
+  - Antenna
   layers:
   - Default
   - TransparentFX

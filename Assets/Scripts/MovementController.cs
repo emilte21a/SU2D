@@ -33,11 +33,14 @@ public class MovementController : MonoBehaviour
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip jumpSound;
 
-    bool isWithinDoor;
+
+    bool isCollidingWithDoor;
+    bool isCollidingWithAntenna;
 
     [Header("Misc")]
     [SerializeField] TMP_Text errorMessage;
-    [SerializeField] public SceneInformation sceneInfo;
+    [SerializeField] int itemCount;
+    SceneInformation sceneInformation;
 
     void Start()
     {
@@ -47,31 +50,39 @@ public class MovementController : MonoBehaviour
 
         rigidbody2D.freezeRotation = true;
 
+        sceneInformation = GetComponent<SceneInfoHolder>().sceneInfo;
     }
 
     void Update()
     {
-        sceneInfo.itemsInInventory = InventoryController.itemsInInventory;
-
-        if (Input.GetKey(KeyCode.C)) transform.localScale = new Vector3(1.5f, 0.8f, 1.5f);
+        if (Input.GetKey(KeyCode.C)) transform.localScale = new Vector3(1.5f, 0.8f, 1.5f); //Crouch
         else transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
-        if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && sceneInfo.currentScene == CurrentScene.Moon)
+        if (isCollidingWithAntenna && Input.GetKeyDown(KeyCode.F))
+            SceneManager.LoadScene("Director");
+
+
+        switch (isCollidingWithDoor)
         {
-            SceneManager.LoadScene("moonBunker");
-            sceneInfo.currentScene = CurrentScene.MoonBunker;
+            case true:
+                if (sceneInformation.currentScene == CurrentScene.Moon && Input.GetKeyDown(KeyCode.F))
+                    SceneManager.LoadScene("moonBunker");
+
+                else if (Input.GetKeyDown(KeyCode.F) && sceneInformation.currentScene == CurrentScene.MoonBunker)
+                {
+                    if (InventoryController.itemsInInventory.Count >= 2)
+                        SceneManager.LoadScene("Moon");
+
+                    else if (InventoryController.itemsInInventory.Count < 2)
+                    {
+                        errorMessage.text = "YOU HAVE NOT GATHERED ENOUGH PARTS...";
+                        StartCoroutine(ErrorMessageDisplay());
+                    }
+                }
+                break;
         }
-        else if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && sceneInfo.currentScene == CurrentScene.MoonBunker && InventoryController.itemsInInventory.Count >= GetComponent<InventoryController>().maxItems)
-        {
-            sceneInfo.currentScene = CurrentScene.Moon;
-            SceneManager.LoadScene("Moon");
-        }
-        else if (isWithinDoor && Input.GetKeyDown(KeyCode.F) && sceneInfo.currentScene == CurrentScene.MoonBunker && InventoryController.itemsInInventory.Count < GetComponent<InventoryController>().maxItems)
-        {
-            errorMessage.text = "YOU HAVE NOT GATHERED ENOUGH PARTS...";
-            StartCoroutine(ErrorMessageDisplay());
-            // StopCoroutine(ErrorMessageClose());
-        }
+
+        #region movement
 
         float horizontalMovement = Input.GetAxisRaw("Horizontal");
 
@@ -125,7 +136,7 @@ public class MovementController : MonoBehaviour
 
         if (lastDirection == 1) spriteHolder.transform.eulerAngles = new Vector3(0, 0, 0); // normal riktning
         else if (lastDirection == -1) spriteHolder.transform.eulerAngles = new Vector3(0, 180, 0); // flippad riktning
-
+        #endregion
     }
 
     public bool IsGrounded()
@@ -153,17 +164,29 @@ public class MovementController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Building"))
+        switch (other.tag)
         {
-            isWithinDoor = true;
+            case "Building":
+                isCollidingWithDoor = true;
+                break;
+
+            case "Antenna":
+                isCollidingWithAntenna = true;
+                break;
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Building"))
+        switch (other.tag)
         {
-            isWithinDoor = false;
+            case "Building":
+                isCollidingWithDoor = false;
+                break;
+
+            case "Antenna":
+                isCollidingWithAntenna = false;
+                break;
         }
     }
 

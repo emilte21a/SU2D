@@ -14,5 +14,5 @@ public enum CurrentScene
 {
     Moon,
     Earth,
-    MoonBunker
+    MoonBunker, Director
 }

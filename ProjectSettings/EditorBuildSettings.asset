@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/moonBunker.unity
     guid: 8892666469af9834987c0637073364b8
+  - enabled: 1
+    path: Assets/Scenes/EndCutscene.unity
+    guid: 563af1b720d158f458c635b5e0607a1e
   m_configObjects: {}

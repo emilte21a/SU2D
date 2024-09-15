@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2e0c094ae04664f9371e15e42ef197, type: 3}
   m_Name: MechanicalPart
   m_EditorClassIdentifier: 
-  name: Mechanical part
+  name: Mechanical Part
   icon: {fileID: 21300000, guid: 43693ba6acf466e418006d1c20650ff2, type: 3}
   itemType: 0

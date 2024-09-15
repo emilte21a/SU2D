@@ -6,30 +6,41 @@ using UnityEngine;
 
 public class InventoryController : MonoBehaviour
 {
-    public TMP_Text textDisplay;
+
+    [SerializeField] TMP_Text mechPartAmountDisplay;
+    [SerializeField] TMP_Text antiVirusVialAmountDisplay;
 
     public static Dictionary<ItemType, int> itemsInInventory;
 
-    public int maxItems = 7;
+    public int maxItems = 6;
 
     void Start()
     {
-        itemsInInventory = new Dictionary<ItemType, int>();
+        itemsInInventory = GetComponent<SceneInfoHolder>().sceneInfo.itemsInInventory;
     }
 
     void Update()
     {
         if (itemsInInventory.Count > 0)
         {
-
             foreach (var kvp in itemsInInventory)
             {
                 if (itemsInInventory.Count > 0)
-                    textDisplay.text = $" {itemsInInventory[kvp.Key]}/" + maxItems;
+                {
+                    if (kvp.Key == ItemType.MechanicalPart)
+                        mechPartAmountDisplay.text = $" {itemsInInventory[kvp.Key]}/" + maxItems;
+
+                    else
+                        antiVirusVialAmountDisplay.text = $"{itemsInInventory[kvp.Key]}/" + 1;
+                }
             }
         }
         else
-            textDisplay.text = $"0/" + maxItems;
+        {
+            mechPartAmountDisplay.text = $"0/" + maxItems;
+            antiVirusVialAmountDisplay.text = $"0/" + 1;
+
+        }
     }
 
     public void AddItemToInventory(ItemType itemType, int quantity)

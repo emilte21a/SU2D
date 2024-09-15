@@ -40,7 +40,7 @@ public class BunkerConfig : MonoBehaviour
 
     void Update()
     {
-
+        // GetComponent<MovementController>().sceneInfo.itemsInInventory = InventoryController.itemsInInventory;
         //Om spelaren tar damage (är glitchig som bara den)
         if (GetComponent<MovementController>().IsGrounded())
         {
@@ -73,24 +73,25 @@ public class BunkerConfig : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Collectible"))
-        {
-            if (inventoryController != null)
-            {
-                GetComponent<AudioSource>().PlayOneShot(collectiblePickupSound);
-                inventoryController.AddItemToInventory(ItemType.MechanicalPart, 1);
-                other.gameObject.SetActive(false);
-            }
-        }
 
-        else if (other.CompareTag("KillZone"))
+        switch (other.tag)
         {
-            GetComponent<BunkerConfig>().HP = 0;
-        }
+            case "Collectible":
+                if (inventoryController != null)
+                {
+                    GetComponent<AudioSource>().PlayOneShot(collectiblePickupSound);
+                    inventoryController.AddItemToInventory(other.GetComponent<ItemObject>().inventoryItem.itemType, 1);
+                    other.gameObject.SetActive(false);
+                }
+                break;
 
-        else if (other.CompareTag("ElectricWire"))
-        {
-            playerIsElectrocuted = true;
+            case "Killzone":
+                GetComponent<BunkerConfig>().HP = 0;
+                break;
+
+            case "ElectricWire":
+                playerIsElectrocuted = true;
+                break;
         }
     }
 
