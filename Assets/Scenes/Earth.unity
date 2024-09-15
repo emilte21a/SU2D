@@ -39821,6 +39821,9 @@ MonoBehaviour:
   - {fileID: 1752913376, guid: 9d06b0aba2cfff548aa3558fc85fc3bf, type: 3}
   sceneInfoHolder: {fileID: 1303326567}
   instructionText: {fileID: 661598298}
+  machineSounds:
+  - {fileID: 8300000, guid: c30cdc99276ada54bb2853dcd3d36f2d, type: 3}
+  - {fileID: 8300000, guid: ce52a2e48bd32cc40945a0db40e2f945, type: 3}
 --- !u!61 &1871394396
 BoxCollider2D:
   m_ObjectHideFlags: 0

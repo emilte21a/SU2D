@@ -10,8 +10,8 @@ public class MachineController : MonoBehaviour
     [SerializeField] Sprite[] machineSprites = new Sprite[3];
     [SerializeField] SceneInfoHolder sceneInfoHolder;
     [SerializeField] TMP_Text instructionText;
-    [SerializeField] AudioClip repairSound;
-    [SerializeField] AudioClip antiVirusSound;
+    [SerializeField] AudioClip[] machineSounds;
+
     SpriteRenderer renderer;
 
     bool isCollidingWithPlayer = false;
@@ -44,8 +44,9 @@ public class MachineController : MonoBehaviour
                     if (index < 3)
                     {
                         index++;
+                        GetComponent<AudioSource>().PlayOneShot(machineSounds[index]);
                     }
-
+                    
                     if (index == 3)
                     {
                         SceneManager.LoadScene("EndCutscene");
