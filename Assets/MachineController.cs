@@ -41,16 +41,13 @@ public class MachineController : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.F))
                 {
 
-                    if (index < 3)
-                    {
-                        index++;
-                        GetComponent<AudioSource>().PlayOneShot(machineSounds[index]);
-                    }
+                    if (index < 3) index++;
+                
+
+                    if (index < 2) GetComponent<AudioSource>().PlayOneShot(machineSounds[index]);
+
+                    if (index == 3) SceneManager.LoadScene("EndCutscene");
                     
-                    if (index == 3)
-                    {
-                        SceneManager.LoadScene("EndCutscene");
-                    }
                 }
             }
             else
